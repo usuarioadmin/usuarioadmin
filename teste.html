@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login, Cadastro e Recuperação de Senha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #3f4a9f;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .link a {
+            color: #5c6bc0;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #5c6bc0;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .navbar .icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar .icons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .navbar .icons button:hover {
+            color: #ffb74d;
+        }
+
+        /* Card Panel */
+        .panel-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .panel-card h3 {
+            font-size: 24px;
+        }
+
+        .panel-card p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div class="container" id="login-container">
+    <h2>Login</h2>
+    <div class="input-group">
+        <label for="email-login">Email</label>
+        <input type="email" id="email-login" placeholder="Digite seu email">
+    </div>
+    <div class="input-group">
+        <label for="senha-login">Senha</label>
+        <input type="password" id="senha-login" placeholder="Digite sua senha">
+    </div>
+    <button class="button" onclick="login()">Entrar</button>
+    <div class="link">
+        <a href="javascript:void(0);" onclick="showCadastro()">Não tem conta? Cadastre-se</a><br>
+        <a href="javascript:void(0);" onclick="showRecuperarSenha()">Esqueceu sua senha?</a>
+    </div>
+    <div class="error" id="login-error"></div>
+</div>
+
+<!-- Cadastro Page -->
+<div class="container" id="cadastro-container" style="display: none;">
+    <h2>Cadastro</h2>
+    <div class="input-group">
+        <label for="nome-cadastro">Nome Completo</label>
+        <input type="text" id="nome-cadastro" placeholder="Digite seu nome completo">
+    </div>
+    <div class="input-group">
+        <label for="email-cadastro">Email</label>
+        <input type="email" id="email-cadastro" placeholder="Digite seu email">
+    </div>
+    <div class="input-group">
+        <label for="senha-cadastro">Senha</label>
+        <input type="password" id="senha-cadastro" placeholder="Digite sua senha">
+    </div>
+    <div class="input-group">
+        <label for="confirmar-senha-cadastro">Confirmar Senha</label>
+        <input type="password" id="confirmar-senha-cadastro" placeholder="Confirme sua senha">
+    </div>
+    <button class="button" onclick="cadastro()">Cadastrar</button>
+    <div class="link">
+        <a href="javascript:void(0);" onclick="showLogin()">Já tem uma conta? Faça login</a>
+    </div>
+    <div class="error" id="cadastro-error"></div>
+</div>
+
+<!-- Recuperação de Senha -->
+<div class="container" id="recuperar-senha-container" style="display: none;">
+    <h2>Recuperar Senha</h2>
+    <div class="input-group">
+        <label for="email-recuperar">Email</label>
+        <input type="email" id="email-recuperar" placeholder="Digite seu email">
+    </div>
+    <button class="button" onclick="recuperarSenha()">Recuperar Senha</button>
+    <div class="link">
+        <a href="javascript:void(0);" onclick="showLogin()">Voltar ao login</a>
+    </div>
+    <div class="error" id="recuperar-senha-error"></div>
+</div>
+
+<!-- Painel de Admin -->
+<div id="admin-panel" style="display: none;">
+    <div class="navbar">
+        <h1>Painel de Admin</h1>
+        <div class="icons">
+            <button onclick="logout()">Sair</button>
+        </div>
+    </div>
+    <div class="panel-card">
+        <h3>Bem-vindo ao painel de Admin!</h3>
+        <p>Aqui você pode gerenciar todos os usuários, visualizar relatórios e muito mais.</p>
+    </div>
+</div>
+
+<!-- Painel do Cliente -->
+<div id="user-panel" style="display: none;">
+    <div class="navbar">
+        <h1>Painel do Usuário</h1>
+        <div class="icons">
+            <button onclick="logout()">Sair</button>
+        </div>
+    </div>
+    <div class="panel-card">
+        <h3>Seja bem-vindo, <span id="nome-usuario-titulo"></span>!</h3>
+        <p>Este é seu painel pessoal. Aqui você pode acessar seus dados, realizar compras e muito mais.</p>
+        <div class="user-actions">
+            <button class="button" onclick="verPerfil()">Ver Perfil</button>
+            <button class="button" onclick="alterarSenha()">Alterar Senha</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const adminEmail = "admin@admin.com";
+    const adminSenha = "admin123";
+
+    let userEmail = "";
+    let userNome = "";
+
+    // Função para mostrar a tela de login
+    function showLogin() {
+        document.getElementById('login-container').style.display = 'block';
+        document.getElementById('cadastro-container').style.display = 'none';
+        document.getElementById('recuperar-senha-container').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('user-panel').style.display = 'none';
+    }
+
+    // Função para mostrar a tela de cadastro
+    function showCadastro() {
+        document.getElementById('cadastro-container').style.display = 'block';
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('recuperar-senha-container').style.display = 'none';
+    }
+
+    // Função para mostrar a tela de recuperação de senha
+    function showRecuperarSenha() {
+        document.getElementById('recuperar-senha-container').style.display = 'block';
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('cadastro-container').style.display = 'none';
+    }
+
+    // Função para cadastro de usuário
+    function cadastro() {
+        const nome = document.getElementById('nome-cadastro').value;
+        const email = document.getElementById('email-cadastro').value;
+        const senha = document.getElementById('senha-cadastro').value;
+        const confirmarSenha = document.getElementById('confirmar-senha-cadastro').value;
+
+        if (!nome || !email || !senha || !confirmarSenha) {
+            document.getElementById('cadastro-error').textContent = "Preencha todos os campos.";
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            document.getElementById('cadastro-error').textContent = "As senhas não coincidem.";
+            return;
+        }
+
+        // Armazenar usuário no localStorage
+        localStorage.setItem(email, JSON.stringify({ nome: nome, senha: senha }));
+        alert("Cadastro realizado com sucesso!");
+        showLogin();
+    }
+
+    // Função para login de usuário
+    function login() {
+        const email = document.getElementById('email-login').value;
+        const senha = document.getElementById('senha-login').value;
+        const storedUser = JSON.parse(localStorage.getItem(email));
+
+        if (email === adminEmail && senha === adminSenha) {
+            // Admin login
+            alert("Bem-vindo, Admin!");
+            document.getElementById('admin-panel').style.display = 'block';
+            showLogin();  // Simulando login de admin
+        } else if (storedUser && storedUser.senha === senha) {
+            // Login do usuário comum
+            userEmail = email;
+            userNome = storedUser.nome;
+            document.getElementById('nome-usuario-titulo').textContent = userNome;
+            alert(`Bem-vindo, ${userNome}!`);
+            document.getElementById('user-panel').style.display = 'block';
+            showLogin();  // Simulando login do usuário
+        } else {
+            document.getElementById('login-error').textContent = "Email ou senha incorretos.";
+        }
+    }
+
+    // Função para recuperar a senha
+    function recuperarSenha() {
+        const email = document.getElementById('email-recuperar').value;
+        const storedUser = JSON.parse(localStorage.getItem(email));
+
+        if (storedUser) {
+            alert("Sua senha é: " + storedUser.senha);
+            showLogin();
+        } else {
+            document.getElementById('recuperar-senha-error').textContent = "Email não encontrado. Crie uma conta.";
+        }
+    }
+
+    // Função para fazer logout
+    function logout() {
+        userEmail = "";
+        userNome = "";
+        document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('user-panel').style.display = 'none';
+        showLogin();
+    }
+
+    // Inicializar com a tela de login
+    showLogin();
+</script>
+
+</body>
+</html>
+

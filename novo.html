@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário - Sistema de Corte de Cabelo</title>
+    <style>
+        /* Adicionei estilos gerais aqui */
+    </style>
+</head>
+<body>
+
+<!-- Painel do Usuário -->
+<div id="user-panel" style="display: none;">
+    <div class="navbar">
+        <h1>Painel do Usuário</h1>
+        <div class="user-info">
+            <span id="nome-usuario"></span>
+            <span id="email-usuario"></span>
+        </div>
+        <div class="icons">
+            <button onclick="mostrarNotificacoes()">🔔</button>
+            <button onclick="logout()">Sair</button>
+        </div>
+    </div>
+    <div class="panel-card">
+        <h3>Seja bem-vindo, <span id="nome-usuario-titulo"></span>!</h3>
+        <p>Este é seu painel pessoal. Aqui você pode acessar seus dados, realizar compras e muito mais.</p>
+        <div class="user-actions">
+            <button class="button" onclick="verPerfil()">Ver Perfil</button>
+            <button class="button" onclick="alterarSenha()">Alterar Senha</button>
+            <button class="button" onclick="reservarCorte()">Reservar Corte</button>
+            <button class="button" onclick="excluirConta()">Excluir Conta</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para alterar senha -->
+<div id="modal-alterar-senha" style="display: none;">
+    <div class="modal-content">
+        <h3>Alterar Senha</h3>
+        <div class="input-group">
+            <label for="senha-antiga">Senha Antiga</label>
+            <input type="password" id="senha-antiga" placeholder="Digite sua senha antiga">
+        </div>
+        <div class="input-group">
+            <label for="nova-senha">Nova Senha</label>
+            <input type="password" id="nova-senha" placeholder="Digite sua nova senha">
+        </div>
+        <div class="input-group">
+            <label for="confirmar-nova-senha">Confirmar Nova Senha</label>
+            <input type="password" id="confirmar-nova-senha" placeholder="Confirme sua nova senha">
+        </div>
+        <button class="button" onclick="confirmarAlterarSenha()">Confirmar</button>
+        <button class="button" onclick="fecharModalAlterarSenha()">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal para excluir conta -->
+<div id="modal-excluir-conta" style="display: none;">
+    <div class="modal-content">
+        <h3>Excluir Conta</h3>
+        <p>Tem certeza que deseja excluir sua conta permanentemente?</p>
+        <button class="button" onclick="confirmarExcluirConta()">Sim, excluir minha conta</button>
+        <button class="button" onclick="fecharModalExcluirConta()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    let userEmail = "";
+    let userNome = "";
+
+    // Função para mostrar o painel do usuário
+    function mostrarPainelUsuario() {
+        const storedUser = JSON.parse(localStorage.getItem(userEmail));
+        if (storedUser) {
+            userNome = storedUser.nome;
+            document.getElementById('nome-usuario').textContent = userNome;
+            document.getElementById('email-usuario').textContent = userEmail;
+            document.getElementById('nome-usuario-titulo').textContent = userNome;
+            document.getElementById('user-panel').style.display = 'block';
+        }
+    }
+
+    // Função para alterar a senha
+    function alterarSenha() {
+        document.getElementById('modal-alterar-senha').style.display = 'block';
+    }
+
+    function confirmarAlterarSenha() {
+        const senhaAntiga = document.getElementById('senha-antiga').value;
+        const novaSenha = document.getElementById('nova-senha').value;
+        const confirmarNovaSenha = document.getElementById('confirmar-nova-senha').value;
+        const storedUser = JSON.parse(localStorage.getItem(userEmail));
+
+        if (senhaAntiga !== storedUser.senha) {
+            alert("A senha antiga está incorreta.");
+            return;
+        }
+
+        if (novaSenha !== confirmarNovaSenha) {
+            alert("As novas senhas não coincidem.");
+            return;
+        }
+
+        storedUser.senha = novaSenha;
+        localStorage.setItem(userEmail, JSON.stringify(storedUser));
+        alert("Senha alterada com sucesso!");
+        fecharModalAlterarSenha();
+    }
+
+    function fecharModalAlterarSenha() {
+        document.getElementById('modal-alterar-senha').style.display = 'none';
+    }
+
+    // Função para excluir a conta
+    function excluirConta() {
+        document.getElementById('modal-excluir-conta').style.display = 'block';
+    }
+
+    function confirmarExcluirConta() {
+        localStorage.removeItem(userEmail);
+        alert("Conta excluída com sucesso!");
+        logout();
+    }
+
+    function fecharModalExcluirConta() {
+        document.getElementById('modal-excluir-conta').style.display = 'none';
+    }
+
+    // Função para logout
+    function logout() {
+        localStorage.removeItem(userEmail);
+        document.getElementById('user-panel').style.display = 'none';
+        alert("Você foi desconectado.");
+        window.location.reload();
+    }
+
+    // Função para reservar corte
+    function reservarCorte() {
+        const corte = prompt("Escolha o corte (ex: corte de cabelo, barba, etc.):");
+        const hora = prompt("Escolha a hora (ex: 10:00, 14:00, etc.):");
+        const sugestao = prompt("Digite uma sugestão de corte (se houver):");
+
+        alert(`Reserva realizada para o corte: ${corte} às ${hora}. Sugestão: ${sugestao}`);
+    }
+
+    // Função para mostrar notificações
+    function mostrarNotificacoes() {
+        alert("Você tem notificações.");
+    }
+
+    // Função para verificar se o usuário está logado
+    function login() {
+        userEmail = prompt("Digite seu email:");
+        const storedUser = JSON.parse(localStorage.getItem(userEmail));
+
+        if (storedUser) {
+            alert(`Bem-vindo, ${storedUser.nome}!`);
+            mostrarPainelUsuario();
+        } else {
+            alert("Usuário não encontrado.");
+        }
+    }
+
+    // Inicializar o login ao carregar a página
+    login();
+
+</script>
+
+</body>
+</html>
