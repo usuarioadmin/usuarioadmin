@@ -22,7 +22,7 @@
 
 ⚡ **Fun Fact:** Always exploring new technologies and challenges, whether creating intelligent systems or innovative games! 🚀  
 
-
+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
 -------------------------------------------------------------------------------------------------
 
 # 👋 Olá, eu sou @usuarioadmin
